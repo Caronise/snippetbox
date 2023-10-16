@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // Define a home handler function which writes a byte slice containing
@@ -22,7 +24,18 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 // Add snippetView handler function.
 func snippetView(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Display a specific snippet..."))
+	// Extract the value of the id parameter from the query string and try to
+	// convert to an integer. If it can't be converted, or value is less than 1,
+	// we return a 404 page not found response.
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+
+	// Use the fmt.Fprintf() function to interpolatethe id value with our
+	// response and write it to the http.ResponseWriter.
+	fmt.Fprintf(w, "Display a specific snipper with ID %d...", id)
 }
 
 // Add a snippetCreate handler function.
