@@ -18,3 +18,5 @@ The *ui* directory contains the user-interface assets used by the web app.
 Specifically, the ui/html directory will contain HTML templates, and the
 ui/static directory will contain static files (CSS and images).
 
+Note: .tmpl extensions aare used for HTML templates, it's only meant to make it
+clear that the file contains a Go template. Alternatively we can use .tmpl.html
