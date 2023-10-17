@@ -8,7 +8,9 @@ applications in the project. For now it is only the web application.
 ## internal
 
 The *internal* directory contains the ancillary non-application-specific code
-used in the project. Such as validation helpers and SQL database models.
+used in the project. Such as validation helpers and SQL database models. In Go,
+any packages under this directory can only be imported by code inside of the
+parent of the internal directory.
 
 ## ui
 
