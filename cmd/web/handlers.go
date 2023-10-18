@@ -9,7 +9,7 @@ import (
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		http.NotFound(w, r)
+		app.notFound(w)
 		return
 	}
 
@@ -25,11 +25,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	// a set. Pass the files slice as variadic parameters.
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
-		app.logger.Error(err.Error(),
-			"method", r.Method,
-			"uri", r.URL.RequestURI(),
-		)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		app.serverError(w, r, err)
 		return
 	}
 
@@ -38,11 +34,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	// represents dynamic data that can be passed in, which can be nil.
 	err = ts.ExecuteTemplate(w, "base", nil)
 	if err != nil {
-		app.logger.Error(err.Error(),
-			"method", r.Method,
-			"uri", r.URL.RequestURI(),
-		)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		app.serverError(w, r, err)
 	}
 }
 
@@ -59,7 +51,7 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
 
