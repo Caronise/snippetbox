@@ -28,24 +28,10 @@ func main() {
 		logger: logger,
 	}
 
-	mux := http.NewServeMux()
+	logger.Info("Starting server on", "addr", *addr)
 
-	// Create a file server to serve files out of ./ui/static directory.
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-
-	// Register the file server as the handler for all URL paths that start with
-	// "/static/". Then strip "/static" prefix.
-	// otherwise it will try to access: ./ui/static/static/somefile.css
-	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
-
-	// Register the other application routes.
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/snippet/view", app.snippetView)
-	mux.HandleFunc("/snippet/create", app.snippetCreate)
-
-	logger.Info("Starting server on", slog.String("addr", *addr))
-
-	err := http.ListenAndServe(*addr, mux)
+	// Call app.routes() to get the servemux containing our routes.
+	err := http.ListenAndServe(*addr, app.routes())
 	logger.Error(err.Error())
 	os.Exit(1)
 }
