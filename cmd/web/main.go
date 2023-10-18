@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+type application struct {
+	logger *slog.Logger
+}
+
 func main() {
 	// Define command-line fag variables and their default values.
 	addr := flag.String("addr", ":8080", "HTTP network address to listen on")
@@ -20,6 +24,10 @@ func main() {
 		//		Level: slog.LevelDebug,
 	}))
 
+	app := &application{
+		logger: logger,
+	}
+
 	mux := http.NewServeMux()
 
 	// Create a file server to serve files out of ./ui/static directory.
@@ -31,11 +39,11 @@ func main() {
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 
 	// Register the other application routes.
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/snippet/view", snippetView)
-	mux.HandleFunc("/snippet/create", snippetCreate)
+	mux.HandleFunc("/", app.home)
+	mux.HandleFunc("/snippet/view", app.snippetView)
+	mux.HandleFunc("/snippet/create", app.snippetCreate)
 
-	logger.Info("Starting server on ", *addr)
+	logger.Info("Starting server on", slog.String("addr", *addr))
 
 	err := http.ListenAndServe(*addr, mux)
 	logger.Error(err.Error())
