@@ -1,11 +1,17 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 )
 
 func main() {
+	// Define command-line fag variables and their default values.
+	addr := flag.String("addr", ":8080", "HTTP network address to listen on")
+
+	flag.Parse()
+
 	mux := http.NewServeMux()
 
 	// Create a file server to serve files out of ./ui/static directory.
@@ -21,9 +27,8 @@ func main() {
 	mux.HandleFunc("/snippet/view", snippetView)
 	mux.HandleFunc("/snippet/create", snippetCreate)
 
-	port := ":8080"
-	log.Print("Starting server on ", port)
+	log.Print("Starting server on ", *addr)
 
-	err := http.ListenAndServe(port, mux)
+	err := http.ListenAndServe(*addr, mux)
 	log.Fatal(err)
 }
