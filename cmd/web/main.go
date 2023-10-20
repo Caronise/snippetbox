@@ -7,13 +7,16 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/Caronise/snippetbox/internal/models"
+
 	// We only use the driver's init() function to run so it can register with
 	// the database/sql package. Hence, we use a blank identifier.
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type application struct {
-	logger *slog.Logger
+	logger   *slog.Logger
+	snippets *models.SnippetModel
 }
 
 func main() {
@@ -40,7 +43,8 @@ func main() {
 	defer db.Close()
 
 	app := &application{
-		logger: logger,
+		logger:   logger,
+		snippets: &models.SnippetModel{DB: db},
 	}
 
 	logger.Info("Starting server on", "addr", *addr)

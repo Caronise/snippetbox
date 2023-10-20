@@ -1,30 +1,42 @@
 # snippetbox
 
-## cmd
+Snippetbox is an application that allows users to create, read and delete Snippets.
+The Directory layout is as follows:
 
-The *cmd* directory contains the application-specific code for the executable
-applications in the project. For now it is only the web application.
+## cmd/
 
-## internal
+The *cmd/* directory contains the application-specific code for the executable
+applications in the project. 
 
-The *internal* directory contains the ancillary non-application-specific code
+### cmd/web/
+
+Snippetbox has a web application, this is where most of the code to operate the
+web app is found.
+
+## internal/
+
+The *internal/* directory contains the ancillary non-application-specific code
 used in the project. Such as validation helpers and SQL database models. In Go,
 any packages under this directory can only be imported by code inside of the
 parent of the internal directory.
 
-## ui
+### internal/models
 
-The *ui* directory contains the user-interface assets used by the web app.
+The *internal/models* directory contains the models for the MySQL database.
 
-### ui/html
-The *ui/html* directory contains HTML templates
+## ui/
 
-- *base.tmpl*: is the base template that is used in most pages.
-- *ui/html/pages*: contains the templates for each individual page.
-- *ui/html/partials*: contains the re-usuable template partials.
+The *ui/* directory contains the user-interface assets used by the web app.
 
-### ui/static
-The *ui/static* directory contains static files (CSS and images).
+### ui/html/
+The *ui/html/* directory contains the HTML templates used by the web app.
+
+- *base.tmpl* is the base template that is used for all web pages.
+- *pages/* directory contains the templates for each individual page.
+- *partials/* directory contains the re-usuable template partials.
+
+### ui/static/
+The *ui/static/* directory contains static files (CSS and images).
 
 Note: This project uses the .tmpl extension for HTML templates, to make it clear
 that the file contains a Go template. Alternatively .tmpl.html can be used.
