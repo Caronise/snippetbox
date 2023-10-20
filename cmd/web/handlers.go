@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -18,27 +17,37 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
 	// Initialize a slice containing the paths to the template files.
 	// NOTE: the base template MUST be the first file in the slice!
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/pages/home.tmpl",
-		"./ui/html/partials/nav.tmpl",
-	}
+	//files := []string{
+	//	"./ui/html/base.tmpl",
+	//	"./ui/html/pages/home.tmpl",
+	//	"./ui/html/partials/nav.tmpl",
+	//}
 
-	// Use template.ParseFiles() function to read the files and store them into
-	// a set. Pass the files slice as variadic parameters.
-	ts, err := template.ParseFiles(files...)
+	snippets, err := app.snippets.Latest()
 	if err != nil {
 		app.serverError(w, r, err)
 		return
 	}
 
+	for _, snippet := range snippets {
+		fmt.Fprintf(w, "%+v", snippet)
+	}
+
+	// Use template.ParseFiles() function to read the files and store them into
+	// a set. Pass the files slice as variadic parameters.
+	//ts, err := template.ParseFiles(files...)
+	//if err != nil {
+	//	app.serverError(w, r, err)
+	//	return
+	//}
+
 	// Use the ExecuteTemplate() method to write the content of the "base"
 	// template as the response body. The last paramater to ExecuteTemplate()
 	// represents dynamic data that can be passed in, which can be nil.
-	err = ts.ExecuteTemplate(w, "base", nil)
-	if err != nil {
-		app.serverError(w, r, err)
-	}
+	//err = ts.ExecuteTemplate(w, "base", nil)
+	//if err != nil {
+	//	app.serverError(w, r, err)
+	//}
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
